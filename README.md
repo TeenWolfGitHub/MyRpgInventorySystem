@@ -1,4 +1,4 @@
-# RPG INVENTORY SYSTEM by 
+# RPG INVENTORY SYSTEM by Rhommel Casabar
 
 ## Overview
 This is my first project using C++ as a self-taught programmer (still learning the language and its more complex tools and properties).
@@ -20,7 +20,7 @@ It has basic attributes all possible items have: a name, weight, description, va
 It is intended to be used as a class semi-interface as it provides essential virtual functions that its subclasses can override to fit their needs.
 The `Item` class has these subclasses: `Miscellaneous`, `Consumable`, `Weapon`, `Armor` (!!To be expanded)
 
-### MISCELLANEOUS Class
+### Miscellaneous Class
 The `Miscellaneous` class is an abstract subclass of `Item`.
 This item subclass adds a category system with a miscellaneous type flag.
 It also provide an overridable `use()` method.
