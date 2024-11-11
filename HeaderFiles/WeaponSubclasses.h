@@ -9,6 +9,9 @@
 
 class Sword : public Weapon {
 public:
+    // Polymorphic function(s) override
+    virtual void equip() const { };
+    virtual void attack() const { };
 
     //Constructor
     Sword(string name, float weight, int damage, ItemRarities swordRarity)
@@ -17,6 +20,9 @@ public:
 
 class Axe : public Weapon {
 public:
+    // Polymorphic function(s) override
+    virtual void equip() const { };
+    virtual void attack() const { };
 
     //Constructor
     Axe(string name, float weight, int damage, ItemRarities axeRarity)
@@ -25,6 +31,9 @@ public:
 
 class Spear : public Weapon {
 public:
+    // Polymorphic function(s) override
+    virtual void equip() const { };
+    virtual void attack() const { };
 
     //Constructor
     Spear(string name, float weight, int damage, ItemRarities spearRarity)
@@ -33,18 +42,24 @@ public:
 
 class Mace : public Weapon {
 public:
+    // Polymorphic function(s) override
+    virtual void equip() const { };
+    virtual void attack() const { };
 
     //Constructor
     Mace(string name, float weight, int damage, ItemRarities maceRarity)
-    : Weapon(name, weight, damage, maceRarity, Weapon::BLUNT, Weapon::MELEE, MACE) {};
+    : Weapon(name, weight, damage, maceRarity, Weapon::IMPACT, Weapon::MELEE, MACE) {};
 };
 
 class WarHammer : public Weapon {
 public:
+    // Polymorphic function(s) override
+    virtual void equip() const { };
+    virtual void attack() const { };
 
     //Constructor
     WarHammer(string name, float weight, int damage, ItemRarities warHammerRarity)
-    : Weapon(name, weight, damage, warHammerRarity, Weapon::BLUNT, Weapon::MELEE, WARHAMMER) {};
+    : Weapon(name, weight, damage, warHammerRarity, Weapon::IMPACT, Weapon::MELEE, WARHAMMER) {};
 };
 
 /*-------------------------------------------------------------------------------------*/
@@ -53,6 +68,9 @@ public:
 
 class ShortBow : public Weapon {
 public:
+    // Polymorphic function(s) override
+    virtual void equip() const { };
+    virtual void attack() const { };
     int range;
 
     //Constructor
@@ -62,6 +80,9 @@ public:
 
 class LongBow : public Weapon {
 public:
+    // Polymorphic function(s) override
+    virtual void equip() const { };
+    virtual void attack() const { };
     int range;
 
     //Constructor
@@ -75,18 +96,24 @@ public:
 
 class Wand : public Weapon {
 public:
+    // Polymorphic function(s) override
+    virtual void equip() const { };
+    virtual void attack() const { };
     int magicMight;
 
     //Constructor
     Wand(string name, float weight, int damage, ItemRarities wandRarity, int magicMight)
-    : Weapon(name, weight, damage, wandRarity, Weapon::PIERCE, Weapon::RANGED, WAND), magicMight{magicMight} {};
+    : Weapon(name, weight, damage, wandRarity, Weapon::MAGIC_DAMAGE, Weapon::RANGED, WAND), magicMight{magicMight} {};
 };
 
 class Staff : public Weapon {
 public:
+    // Polymorphic function(s) override
+    virtual void equip() const { };
+    virtual void attack() const { };
     int magicMight;
 
     //Constructor
     Staff(string name, float weight, int damage, ItemRarities staffRarity, int magicMight)
-    : Weapon(name, weight, damage, staffRarity, Weapon::PIERCE, Weapon::RANGED, STAFF), magicMight{magicMight} {};
+    : Weapon(name, weight, damage, staffRarity, Weapon::MAGIC_DAMAGE, Weapon::RANGED, STAFF), magicMight{magicMight} {};
 };

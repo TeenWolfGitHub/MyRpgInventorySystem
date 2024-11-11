@@ -41,15 +41,15 @@ void Inventory::sortByType() {
     std::sort(itemsInInventory.begin(), itemsInInventory.end(),
               [](const std::unique_ptr<Item>& a, const std::unique_ptr<Item>& b) {
                   // First, compare by item type
-                  if (a->getItemType() != b->getItemType()) {
-                      return a->getItemType() < b->getItemType();
+                  if (a->getItemTypeByValue() != b->getItemTypeByValue()) {
+                      return a->getItemTypeByValue() < b->getItemTypeByValue();
                   }
                   
                   // If item types are the same, compare further if needed (e.g., by weapon type, rarity, etc.)
-                  if (a->getItemType() == Item::WEAPON) {
+                  if (a->getItemTypeByValue() == Item::WEAPON) {
                       const auto* weaponA = dynamic_cast<const Weapon*>(a.get());
                       const auto* weaponB = dynamic_cast<const Weapon*>(b.get());
-                      return weaponA->getWeaponType() < weaponB->getWeaponType();
+                      return weaponA->getWeaponTypeByValue() < weaponB->getWeaponTypeByValue();
                   }
                   return false; // No further sorting for non-weapon items
               });

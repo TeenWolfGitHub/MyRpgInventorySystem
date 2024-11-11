@@ -1,8 +1,8 @@
 #pragma once
 
-#include "WeaponTypes.h"
+#include "WeaponSubclasses.h"
 
-extern const vector<Sword> gameSwordsList;
+extern const vector<Sword> SwordsList;
 enum gameSwordsNames {
     RUSTY_IRON_SWORD,
     OLD_SHORT_SWORD,
@@ -53,7 +53,8 @@ enum gameSwordsNames {
     NUM_SWORDS
 };
 
-extern const vector<Axe> gameAxesList;
+
+extern const vector<Axe> AxesList;
 enum gameAxesNames {
     RUSTY_HATCHET,
     SPLINTERED_WOODCUTTER_S_AXE,

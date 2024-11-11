@@ -1,6 +1,6 @@
 #pragma once
 
-#include "WeaponTypes.h"
+#include "WeaponSubclasses.h"
 
 class Inventory {
     vector<unique_ptr<Item>> itemsInInventory;

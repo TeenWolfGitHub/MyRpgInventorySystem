@@ -1,32 +1,73 @@
 #pragma once
 
 #include "basics.h"
+#include "ItemList.h"
 
 class Item {
 public:
+    // Lists of categorization flags - Can be expanded
+    enum ItemRarities { COMMON, UNCOMMON, RARE, EPIC, LEGENDARY, UNIQUE };
+    enum ItemTypes { NONE, MISCELLANEOUS, CONSUMABLE, WEAPON, SHIELD, ARMOR };
 
-    enum ItemRarities {
-        COMMON, UNCOMMON, RARE, EPIC, LEGENDARY, UNIQUE
-    };
-
-    enum ItemTypes {
-        NONE, MISCELLANEOUS, CONSUMABLE, WEAPON, SHIELD, ARMOR
-    };
-
+    // Item basic attributes
     string name;
+    string description;
     float weight;
+    float goldValue;
     ItemRarities itemRarity;
     ItemTypes itemType;
 
+    // Polymorphic pure virtual function(s)
     virtual void displayItem() const = 0;
-    virtual ItemTypes getItemType() const { return itemType; };
-    friend string itemRarityToString(const Item *item);
 
+    // Getter and Setters
+    ItemTypes getItemTypeByValue() const { return itemType; }
+    string getItemTypeAsString() const;
+    ItemRarities getItemRarityByValue() const { return itemRarity; }
+    string getItemRarityAsString() const;
+
+    //Constructor
+    Item(string name = "Dummy", float weight = 0, ItemRarities itemRarity = Item::COMMON, ItemTypes itemType = NONE)
+    : name{name}, weight{weight}, goldValue{0}, itemRarity{itemRarity}, itemType{itemType} {
+        static ItemList AllItems;
+        // Assigns the corresponding descrpition stored in the ItemList Class
+        description = AllItems.getDescription(name);
+    };
+};
+
+/*-------------------------------------------------------------------------------------*/
+// MISCELLANEOUS - A 'Miscellaneous' is an Item that can be 'used' in various ways
+/*-------------------------------------------------------------------------------------*/
+
+class Miscellaneous : public Item {
+private:
+    // hiding Item Rarity inherited attribute (Miscellaneous will not have a rarity)
+    using Item::itemRarity;
+public:
+    // List(s) of categorization flags - can be expanded
+    enum MiscellaneousTypes { INVALID_MISCELLANEOUS_TYPE, TRASH, VALUABLE, RESOURCE, KEY_ITEM};
+
+    // Weapon specialized attribute(s)
+    MiscellaneousTypes miscellaneousType;
+
+    // Polymorphic pure virtual function(s)
+    virtual void use() const = 0;
+
+    // Polymorphic function(s) override
+    virtual void displayItem() const override;
+
+    // Getter(s) and Setter(s)
+    MiscellaneousTypes getMiscellaneousTypeByValue() const { return miscellaneousType; }
+    string getMiscellaneousTypeAsString() const;
 
     //CONSTRUCTOR
-    Item(string name = "Dummy", float weight = 0, ItemRarities itemRarity = Item::COMMON, ItemTypes itemType = NONE)
-    : name{name}, weight{weight}, itemRarity{itemRarity}, itemType{itemType} {};
+    Miscellaneous(string name, float weight, MiscellaneousTypes miscellaneousType = INVALID_MISCELLANEOUS_TYPE)
+    : Item(name, weight, Item::COMMON, Item::MISCELLANEOUS), miscellaneousType{miscellaneousType} {
+        goldValue = 0.0;
+    };
+
 };
+
 
 /*-------------------------------------------------------------------------------------*/
 // WEAPON - A 'Weapon' is an Item that can deal damage and is I_equippable
@@ -34,31 +75,38 @@ public:
 
 class Weapon : public Item {
 public:
+    // List(s) of categorization flags - can be expanded
     enum WeaponTypes {
-        INVALID, SWORD, AXE, SPEAR, MACE, WARHAMMER, SHORT_BOW, LONG_BOW, WAND, STAFF
+        INVALID_WEAPON_TYPE, SWORD, AXE, SPEAR, MACE, WARHAMMER, SHORT_BOW, LONG_BOW, WAND, STAFF
     };
-    enum DamageTypes {
-        NONE, SLASH, PIERCE, BLUNT, MAGIC
-    };
+    enum DamageTypes { INVALID_DAMAGE_TYPE, SLASH, PIERCE, IMPACT, MAGIC_DAMAGE };
 
-    enum AttackTypes {
-        UNARMED, MELEE, RANGED
-    };
+    enum AttackTypes { INVALID_ATTACK_TYPE, UNARMED, MELEE, RANGED };
 
-    WeaponTypes weaponType;
+    // Weapon specialized attribute(s)
     int damage;
+    WeaponTypes weaponType;
     DamageTypes damageType;
     AttackTypes attackType;
 
-    virtual void displayItem() const override;
-    virtual WeaponTypes getWeaponType() const { return weaponType; }
+    // Polymorphic pure virtual function(s)
+    virtual void equip() const = 0;
+    virtual void attack() const = 0;
 
-    friend string damageTypeToString(const Weapon *weapon);
-    friend string attackTypeToString(const Weapon *weapon);
+    // Polymorphic function(s) override
+    virtual void displayItem() const override;
+
+    // Getter and Setters
+    WeaponTypes getWeaponTypeByValue() const { return weaponType; }
+    string getWeaponTypeAsString() const;
+    DamageTypes getDamageTypeByValue() const { return damageType; }
+    string getDamageTypeAsString() const;
+    AttackTypes getAttackTypeByValue() const { return attackType; }
+    string getAttackTypeAsString() const;
 
     //CONSTRUCTOR
-    Weapon(string name, float weight, int damage = 0, ItemRarities weaponRarity = COMMON, DamageTypes damageType = Weapon::NONE, AttackTypes attackType = Weapon::UNARMED, WeaponTypes weaponType = INVALID)
-    : Item(name, weight, weaponRarity, WEAPON), damage{damage}, damageType{damageType}, attackType{attackType}, weaponType{weaponType} {};
+    Weapon(string name, float weight, int damage = 0, ItemRarities weaponRarity = COMMON, DamageTypes damageType = INVALID_DAMAGE_TYPE,
+            AttackTypes attackType = INVALID_ATTACK_TYPE, WeaponTypes weaponType = INVALID_WEAPON_TYPE);
 };
 
 /*-------------------------------------------------------------------------------------*/
@@ -67,32 +115,53 @@ public:
 
 class Armor : public Item {
 public:
-    ItemTypes is{ARMOR};
-    int defenseValue;
+    // List(s) of categorization flags - can be expanded
+    enum ArmorTypes { INVALID_ARMOR_TYPE, CLOTHING, ROBE, LIGHT_ARMOR, MEDIUM_ARMOR, HEAVY_ARMOR}; 
 
+    // Armor specialized attribute(s)
+    int physicalDefense;
+    int magicalDefense;
+    ArmorTypes armorType;
+
+    // Polymorphic pure virtual function(s)
+    virtual void equip() const = 0;
+
+    // Polymorphic function(s) override
     virtual void displayItem() const override;
-    virtual ItemTypes getItemType() const override { return is; }
+
+    // Getter(s) and Setter(s)
+    ArmorTypes getArmorTypeByValue() const { return armorType; }
+    string getArmorTypeAsString() const;
 
     //CONSTRUCTOR
-    Armor(string name, float weight, int defenseValue, ItemRarities armorRarity = COMMON)
-    : Item(name, weight, armorRarity, ARMOR), defenseValue{defenseValue} {};
-
+    Armor(string name, float weight, int physicalDefense = 0, int magicalDefense = 0,
+    ItemRarities armorRarity = COMMON, ArmorTypes armorType = INVALID_ARMOR_TYPE);
 };
-
 /*-------------------------------------------------------------------------------------*/
-// POTION - A 'Potion' is an Item that heals an Entity
+// CONSUMBALE - A 'Consumable' is an Item that can be consumed
 /*-------------------------------------------------------------------------------------*/
 
-class Potion : public Item {
+class Consumable : public Item {
 public:
-    ItemTypes is{CONSUMABLE};
-    int healingPower;
+    // List(s) of categorization flags - can be expanded
+    enum ConsumableTypes { INVALID_CONSUMABLE_TYPE, INGREDIENT, FOOD, POTION };
+    // Consumable specialized Attribute(s)
+    ConsumableTypes consumableType;
 
+    // Polymorphic pure virtual function(s)
+    virtual void consume() const = 0;
+
+    // Polymorphic function(s) override
     virtual void displayItem() const override;
-    virtual ItemTypes getItemType() const override { return is; }
+
+    // Getter(s) and Setter(s)
+    ConsumableTypes getConsumableTypeByValue() const { return consumableType; }
+    string getConsumableTypeAsString() const;
 
     //CONSTRUCTOR
-    Potion(string name, float weight, int healingPower = 0, ItemRarities potionRarity = COMMON)
-    : Item(name, weight, potionRarity, CONSUMABLE), healingPower{healingPower} {};
+    Consumable(string name, float weight, ItemRarities consumableRarity = COMMON)
+    : Item(name, weight, consumableRarity, CONSUMABLE) {
+        goldValue = 0.0;
+    };
 
 };
